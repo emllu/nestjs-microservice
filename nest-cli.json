@@ -10,15 +10,6 @@
   "monorepo": true,
   "root": "apps/api-gateway",
   "projects": {
-    "product": {
-      "type": "application",
-      "root": "apps/product",
-      "entryFile": "main",
-      "sourceRoot": "apps/product/src",
-      "compilerOptions": {
-        "tsConfigPath": "apps/product/tsconfig.app.json"
-      }
-    },
     "common": {
       "type": "library",
       "root": "libs/common",

@@ -1,17 +1,24 @@
 import { Module } from '@nestjs/common';
 import { ClientsModule, Transport } from '@nestjs/microservices';
-import { ProductController } from './api-gateway.controller'
+import { ConfigModule } from '@nestjs/config';
+import { GraphQLModule } from '@nestjs/graphql';
+import { ApolloGatewayDriver, ApolloGatewayDriverConfig } from '@nestjs/apollo';
+import { graphql } from 'graphql';
+import { IntrospectAndCompose } from '@apollo/gateway';
 
 @Module({
   imports: [
-    ClientsModule.register([
-      {
-        name: 'PRODUCT_SERVICE',
-        transport: Transport.TCP,
-        options: { host: '127.0.0.1', port: 3001 },
+    GraphQLModule.forRoot<ApolloGatewayDriverConfig>({
+      driver: ApolloGatewayDriver,
+      gateway: {
+        supergraphSdl: new IntrospectAndCompose({
+          subgraphs: [
+            { name: 'user', url: 'http://localhost:3003/graphql' }, // Updated to match the new HTTP GraphQL port
+          ],
+        }),
       },
-    ]),
+    }),
+    ConfigModule.forRoot({ isGlobal: true }),
   ],
-  controllers: [ProductController],
 })
 export class ApiGatewayModule {}

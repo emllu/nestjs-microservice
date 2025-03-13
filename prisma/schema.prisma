@@ -9,6 +9,34 @@ generator client {
 }
 
 datasource db {
-  provider = "postgresql"
+  provider = "mysql"
   url      = env("DATABASE_URL")
+}
+enum Role {
+    Admin
+    User
+}
+
+model Avatars {
+   id Int @id @default(autoincrement())
+    public_id String
+    url       String
+    user      User   @relation(fields: [userId], references: [id])
+    userId    Int  @unique
+}
+
+model User {
+    id Int @id @default(autoincrement())
+    name         String
+    email        String   @unique
+    // phone_number Float? @unique  ===> we can't use this line because sometime our phone number is null and then we can't compare it
+    phone_number Float?
+    address      String?
+    password     String
+    avatar       Avatars?
+    role         Role     @default(User)
+    createdAt    DateTime @default(now())
+    updatedAt    DateTime @updatedAt
+
+    @@unique([email, phone_number], name: "unique_email_phone_number") // In this approach, a composite unique constraint (@@unique) is created on both email and phone_number. This allows phone_number to be null but enforces uniqueness when phone_number is not null.
 }
