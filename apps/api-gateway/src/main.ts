@@ -1,18 +1,18 @@
 import { NestFactory } from '@nestjs/core';
-import { ApiGatewayModule } from './api-gateway.module';
-import { MicroserviceOptions, Transport } from '@nestjs/microservices';
+import { AppModule } from './api-gateway.module';
+import { console } from 'inspector/promises';
 
 async function bootstrap() {
-  const app = await NestFactory.create(ApiGatewayModule);
+  try {
+    const app = await NestFactory.create(AppModule);
+    app.enableCors({
+      origin: '*',
+    });
 
-  // Enable Microservice Communication
-  app.connectMicroservice<MicroserviceOptions>({
-    transport: Transport.TCP,
-    options: { host: '127.0.0.1', port: 3002 }, // API Gateway Microservice Port
-  });
-
-  await app.startAllMicroservices();
-  await app.listen(3000); // API Gateway HTTP Port
-  console.log('API Gateway is running on http://localhost:3000');
+    await app.listen(3001);
+    console.log(` API Gateway is running on http://localhost:3001}`);
+  } catch (error) {
+    console.error(' Failed to start API Gateway:', error);
+  }
 }
 bootstrap();

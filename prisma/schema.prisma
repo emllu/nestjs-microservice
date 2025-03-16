@@ -21,13 +21,13 @@ model Avatars {
    id Int @id @default(autoincrement())
     public_id String
     url       String
-    user      User   @relation(fields: [userId], references: [id])
+    user      user   @relation(fields: [userId], references: [id])
     userId    Int  @unique
 }
 
-model User {
+model user {
     id Int @id @default(autoincrement())
-    name         String
+    name         String   @unique
     email        String   @unique
     // phone_number Float? @unique  ===> we can't use this line because sometime our phone number is null and then we can't compare it
     phone_number Float?

@@ -1,19 +1,26 @@
 import { Module } from '@nestjs/common';
-import { UserController } from './user.controller';
 import { UserService } from './user.service';
+import { UsersResolver } from './user.resolver';
 import { GraphQLModule } from '@nestjs/graphql';
-import { ApolloFederationDriver, ApolloFederationDriverConfig } from '@nestjs/apollo';
-import { UserResolver } from './user.resolver';
-import { PrismaService } from 'libs/prisma/prisma/prisma.service';
+import { PrismaService } from '../../../prisma/prisma.service';
+import {
+  ApolloFederationDriver,
+  ApolloFederationDriverConfig,
+} from '@nestjs/apollo';
+import { PrismaModule } from '../prisma/prisma.module';
 
 @Module({
   imports: [
     GraphQLModule.forRoot<ApolloFederationDriverConfig>({
       driver: ApolloFederationDriver,
-      autoSchemaFile: true,  // Enables automatic schema generation
+      autoSchemaFile: {
+        federation: 2, // This is fine if you're using Apollo Federation 2 features
+      },
     }),
-  ],
-  controllers: [UserController],
-  providers: [UserService, UserResolver, PrismaService], // Removed duplicate UserService
+    PrismaModule
+  
+  ]
+  ,
+  providers: [UsersResolver, UserService],
 })
 export class UserModule {}

@@ -1,10 +1,20 @@
 import { NestFactory } from '@nestjs/core';
+import { ConfigService } from '@nestjs/config';
 import { UserModule } from './user.module';
 
+
 async function bootstrap() {
-  const app = await NestFactory.create(UserModule);
-  app.enableCors();
-  await app.listen(3003); // User Microservice runs GraphQL on port 3003
-  console.log('User GraphQL Service running on http://localhost:3003/graphql');
+  try {
+    const app = await NestFactory.create(UserModule);
+
+    app.enableCors({
+      origin: '*',
+    });
+
+    await app.listen(4002);
+    console.log(`API Gateway is running on http://localhost:4002`);
+  } catch (error) {
+    console.error(' Failed to start API Gateway:', error);
+  }
 }
 bootstrap();

@@ -1,5 +1,4 @@
 import { ObjectType, Field, Directive } from '@nestjs/graphql';
-
 @ObjectType()
 @Directive('@key(fields:"id")')
 export class Avatars {
@@ -19,7 +18,7 @@ export class Avatars {
 @ObjectType()
 export class User {
   @Field()
-  id: string;
+  id: number;
 
   @Field()
   name: string;
